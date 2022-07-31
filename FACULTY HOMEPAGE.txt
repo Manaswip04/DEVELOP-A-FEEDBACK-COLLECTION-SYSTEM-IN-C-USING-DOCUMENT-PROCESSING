@@ -1,0 +1,105 @@
+#pragma once
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+using namespace System::IO;
+using namespace System::Net::Mail;
+namespace StuMgmtSys {
+using namespace System;
+using namespace System::ComponentModel;
+using namespace System::Collections;
+using namespace System::Windows::Forms;
+using namespace System::Data;
+using namespace System::Drawing;
+using namespace System::Text::RegularExpressions;
+/// <summary>
+/// Summary for LecturerPage
+/// </summary>
+public ref class LecturerPage : public System::Windows::Forms::Form
+{
+String^ Lid;
+String^ Em;
+String^ Ph;
+String^ Seme;
+String^ Dept;
+public:
+LecturerPage(void)
+{
+InitializeComponent();
+//
+//TODO: Add the constructor code here
+//
+}
+LecturerPage(String^ Sid, String^ Email, String^ Phone, String^ Sem, String^ Dep)
+{
+InitializeComponent();
+this->textBox1->Text = Sid;
+Lid = Sid;
+Em= Email;
+Ph= Phone;
+Seme= Sem;
+Dept=Dep;
+}
+Double score = acount / scount;
+this->label5->Text = Convert::ToString(score) + "/5";
+din->Close();
+/*
+String^ path = "D:\\FAScore.txt";
+//Pass the file path and file name to the StreamWriter Constructor.
+StreamWriter^ sw = File::AppendText(path);//gcnew StreamWriter(L"F:\\Hcredentials.txt");
+String^ line = this->textBox1->Text + "-" + Convert::ToString(score) + "\r\n";
+//Write a line of text.
+sw->Write(line);
+//Close the file.
+sw->Close();
+*/
+String^ path1 = "D:\\FAScoreBac.txt";
+File::Delete(path1);
+StreamWriter^ sw = File::AppendText(path1);
+path = "D:\\FAScore.txt";
+din = File::OpenText(path);
+String^ line = this->textBox1->Text + "-";
+String^ newline = this->textBox1->Text + "-"+ Em + "-" + Ph + "-" + Seme + "-" + Dept + "-" 
++ Convert::ToString(score);
+MessageBox::Show(newline);
+//MessageBox::Show(newline);
+str = "";
+bool flag = false;
+while ((str = din->ReadLine()) != nullptr)
+{
+bool b;
+b = str->StartsWith(line);
+if (b)
+{
+flag = true;
+}
+else
+{
+sw->WriteLine(str);
+}
+}
+din->Close();
+sw->WriteLine(newline);
+sw->Close();
+if (flag)
+{
+path = "D:\\FAScore.txt";
+File::Delete(path);
+//CFile::Rename("F:\\HpatientdataBac.txt","F:\\Hpatientdataxx.txt");
+int result = rename("D:\\FAScoreBac.txt", "D:\\FAScore.txt");
+//Pass the file path and file name to the StreamWriter Constructor.
+//StreamWriter^ sw = 
+//File::Delete( path );//gcnew StreamWriter(L"F:\\Hcredentials.txt");
+//String^ line= this->textBox8->Text+"-"+this->textBox5->Text+"-"+this->textBox7-
+>Text+"-"+this->textBox6->Text+"\r\n";
+//Write a line of text.
+//sw->Write(line);
+//Close the file.
+//sw->Close();
+//MessageBox::Show("Data Updated Successfully");
+}
+}
+private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+};
+}

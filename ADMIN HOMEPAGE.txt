@@ -1,0 +1,190 @@
+#pragma once
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+using namespace System::Net::Mail;
+using namespace System::IO;
+namespace StuMgmtSys {
+using namespace System;
+using namespace System::ComponentModel;
+using namespace System::Collections;
+using namespace System::Windows::Forms;
+using namespace System::Data;
+using namespace System::Drawing;
+using namespace System::Text::RegularExpressions;
+/// <summary>
+/// Summary for AdminHome
+/// </summary>
+public ref class AdminHome : public System::Windows::Forms::Form
+{
+public:
+AdminHome(void)
+{
+InitializeComponent();
+//
+//TODO: Add the constructor code here
+//
+}
+protected:
+/// <summary>
+/// Clean up any resources being used.
+/// </summary>
+~AdminHome()
+{
+if (components)
+{
+delete components;
+}
+}
+}
+private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+String^ path = "D:\\SFcredentials.txt";
+StreamReader^ din = File::OpenText(path);
+array<String^>^ words;
+String^ delimStr = "-";
+DataSet^ myDataSet = gcnew DataSet("Teachers Data");
+myDataSet->Tables->Add("tData");
+DataTable^ patTable = myDataSet->Tables["tData"];
+//DataColumn^ firstNameColumn1 = playerTable->Columns->Add("First 
+Name",String::typeid);
+//DataColumn^ lastNameColumn1 = playerTable->Columns->Add("Last 
+Name",String::typeid);
+patTable->Columns->Add("User Id", String::typeid);
+patTable->Columns->Add("User Name", String::typeid);
+patTable->Columns->Add("Email", String::typeid);
+patTable->Columns->Add("Phone", String::typeid);
+patTable->Columns->Add("Type of User", String::typeid);
+patTable->Columns->Add("Semester", String::typeid);
+patTable->Columns->Add("Branch", String::typeid);
+dataGridView1->DataSource = patTable;
+String^ line = this->textBox1->Text + "-" + this->textBox2->Text;
+String^ str;
+//bool flag=false;
+while ((str = din->ReadLine()) != nullptr)
+{
+array<Char>^sep = gcnew array<Char>{'-'};
+words = str->Split(sep);
+//words = str->ToString()->Split("-");
+//for (int i=0; i<words->Length; i++) 
+{
+patTable->Rows->Add(words[0], words[1], words[2], words[3], words[4], 
+words[5], words[6]);
+}
+}
+din->Close();
+/* if(flag)
+{
+MessageBox::Show("Credentials Found !!");
+HomePage^ h=gcnew HomePage();
+h->Show();
+this->Hide();
+}
+else
+{
+MessageBox::Show("Invalid Credentials !!");
+}*/
+}
+private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+this->textBox5->Clear();
+this->textBox6->Clear();
+this->textBox7->Clear();
+this->textBox8->Clear();
+}
+private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e) {
+if (this->textBox5->Text != "" && this->textBox6->Text != "" && this->textBox7->Text != "" 
+&& this->textBox8->Text != "")
+{
+String^ path1 = "D:\\SFcredentialsBac.txt";
+File::Delete(path1);
+StreamWriter^ sw = File::AppendText(path1);
+String^ path = "D:\\SFcredentials.txt";
+StreamReader^ din = File::OpenText(path);
+String^ line = this->textBox5->Text + "-" + this->textBox6->Text;
+String^ str;
+bool flag = false;
+while ((str = din->ReadLine()) != nullptr)
+{
+bool b;
+b = str->StartsWith(line);
+if (b)
+{
+flag = true;
+}
+else
+{
+sw->WriteLine(str);
+}
+}
+din->Close();
+sw->Close();
+if (flag)
+{
+String^ path = "D:\\SFcredentials.txt";
+File::Delete(path);
+//CFile::Rename("F:\\HpatientdataBac.txt","F:\\Hpatientdataxx.txt");
+int result = rename("D:\\SFcredentialsBac.txt", "D:\\SFcredentials.txt");
+//Pass the file path and file name to the StreamWriter Constructor.
+//StreamWriter^ sw = 
+//File::Delete( path );//gcnew StreamWriter(L"F:\\Hcredentials.txt");
+//String^ line= this->textBox8->Text+"-"+this->textBox5->Text+"-"+this-
+>textBox7->Text+"-"+this->textBox6->Text+"\r\n";
+//Write a line of text.
+//sw->Write(line);
+//Close the file.
+//sw->Close();
+MessageBox::Show("User Data Removed Successfully");
+this->textBox5->Clear();
+this->textBox6->Clear();
+this->textBox7->Clear();
+this->textBox8->Clear();
+}
+}
+else
+{
+MessageBox::Show("No User Info To Delete !!");
+}
+}
+private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+if (this->textBox5->Text != "")
+{
+String^ path = "D:\\SFcredentials.txt";
+StreamReader^ din = File::OpenText(path);
+String^ line = this->textBox5->Text+"-";
+String^ str;
+bool flag = false;
+while ((str = din->ReadLine()) != nullptr)
+{
+bool b;
+b = str->StartsWith(line);
+if (b)
+{
+flag = true;
+array<Char>^sep = gcnew array<Char>{'-'};
+array<String^>^ words = str->Split(sep);
+this->textBox6->Text = words[1];
+this->textBox7->Text = words[2];
+this->textBox8->Text = words[3];
+}
+}
+din->Close();
+if (flag)
+{
+MessageBox::Show("Records Identified !!");
+}
+else
+{
+MessageBox::Show("No Records Found !!");
+}
+}
+else
+{
+MessageBox::Show("Please Enter User ID !!");
+}
+}
+private: System::Void AdminHome_Load(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void textBox1_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+};
+}
+

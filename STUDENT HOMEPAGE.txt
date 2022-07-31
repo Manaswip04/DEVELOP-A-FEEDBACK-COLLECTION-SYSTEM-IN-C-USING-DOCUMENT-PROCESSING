@@ -1,0 +1,108 @@
+#pragma once
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+using namespace System::IO;
+using namespace System::Net::Mail;
+namespace StuMgmtSys {
+using namespace System;
+using namespace System::ComponentModel;
+using namespace System::Collections;
+using namespace System::Windows::Forms;
+using namespace System::Data;
+using namespace System::Drawing;
+/// <summary>
+/// Summary for StudentPage
+/// </summary>
+public ref class StudentPage : public System::Windows::Forms::Form
+{
+public:
+StudentPage(void)
+{
+InitializeComponent();
+//
+//TODO: Add the constructor code here
+//
+}
+StudentPage(String^ Sid)
+{
+InitializeComponent();
+this->textBox1->Text = Sid;
+String^ path1 = "D:\\SFcredentials.txt";
+StreamReader^ din1 = File::OpenText(path1);
+String^ line1 = Sid + "-";
+String^ str1;
+bool flag1 = false;
+while ((str1 = din1->ReadLine()) != nullptr)
+{
+bool b;
+b = str1->StartsWith(line1);
+if (b)
+{
+array<Char>^sep = gcnew array<Char>{'-'};
+array<String^>^ words = str1->Split(sep);
+this->textBox2->Text = words[1];
+this->textBox3->Text = words[2];
+this->textBox4->Text = words[3];
+this->comboBox2->Text = words[5];
+this->comboBox3->Text = words[6];
+}
+}
+private: System::Void linkLabel1_LinkClicked(System::Object^ sender, 
+System::Windows::Forms::LinkLabelLinkClickedEventArgs^ e) {
+Application::Exit();
+}
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+if (this->comboBox1->Text != "--Select--" && this->comboBox4->Text != "--Select--" && 
+this->comboBox5->Text != "--Select--" && this->comboBox6->Text != "--Select--" && this-
+>comboBox7->Text != "--Select--")
+{
+String^ path = "D:\\SFfeedbackdata.txt";
+//Pass the file path and file name to the StreamWriter Constructor.
+StreamWriter^ sw = File::AppendText(path);//gcnew 
+StreamWriter(L"F:\\Hcredentials.txt");
+String^ line = this->comboBox8->Text + "-" + this->textBox1-
+>Text + "-" + this->comboBox2->Text + "-" + this->comboBox3->Text + "-" + this->comboBox1-
+>Text + "-" + this->comboBox4->Text + "-" + this->comboBox5->Text + "-" + this->comboBox6-
+>Text + "-" + this->comboBox7->Text + "\r\n";
+//Write a line of text.
+sw->Write(line);
+//Close the file.
+sw->Close();
+MessageBox::Show("Feedback Created Successfully");
+this->comboBox1->Text = "--Select--";
+this->comboBox5->Text = "--Select--";
+this->comboBox4->Text = "--Select--";
+this->comboBox6->Text = "--Select--";
+this->comboBox7->Text = "--Select--";
+}
+else
+{
+MessageBox::Show("Please Select Rating");
+}
+}
+private: System::Void StudentPage_Load(System::Object^ sender, System::EventArgs^ e) {
+String^ path = "D:\\SFcredentials.txt";
+StreamReader^ din = File::OpenText(path);
+array<String^>^ words;
+String^ delimStr = "-";
+String^ str;
+//bool flag=false;
+while ((str = din->ReadLine()) != nullptr)
+{
+array<Char>^sep = gcnew array<Char>{'-'};
+words = str->Split(sep);
+//words = str->ToString()->Split("-");
+//for (int i=0; i<words->Length; i++) 
+if (words[4] == "Teacher")
+{
+this->comboBox8->Items->Add(words[0]);
+}
+}
+din->Close();
+}
+private: System::Void comboBox8_SelectedIndexChanged(System::Object^ sender, 
+System::EventArgs^ e) {
+}
+};
+}
